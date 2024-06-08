@@ -1,0 +1,464 @@
+{% include 'header.html' %}
+
+
+
+
+
+<br>
+
+
+<button class="btn btn-success" data-toggle="modal" data-target="#IngresarAfiliado" tabindex="-1" aria-disabled="true" >Ingresar afiliado </button>
+<br>
+<br>
+
+
+
+
+
+    <table class="table table-light" id="datatable">
+        <thead class="thead-light">
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Sexo</th>
+                <th>Fuerza</th>
+                <th>Estado</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for afiliado in afiliado %}
+
+            <tr>
+                <td>{{afiliado[1]}}</td>
+                <td>{{afiliado[2]}}</td>
+                <td>{{afiliado[3]}}</td>
+                <td>{{afiliado[4]}}</td>
+                <td>{{afiliado[5]}}</td>
+                <td>{{afiliado[6]}}</td>
+                {% if afiliado[7] == 'PENDIENTE' %}
+                <td style="background-color: rgba(229, 255, 0, 0.849)">{{afiliado[7]}}</td>
+                {% else %}
+                <td style="background-color: rgb(0, 255, 76)">{{afiliado[7]}}</td>
+                
+                {% endif %}
+                
+                
+                <td>{{afiliado[8]}}</td>
+                <td>
+                    <button class="btn btn-warning editar-btn" data-id="{{afiliado[0]}}" data-toggle="modal"
+                        data-target="#ModificarAfiliado"> <i class="fas fa-edit"> </i> </button>
+                    <button class="btn btn-success internacion-btn" data-id="{{afiliado[0]}}" data-toggle="modal"
+                        data-target="#IngresarInternacion"> <i class="fas fa-plus"></i></button>
+
+                    <!--<a class="btn btn-success" href="#" data-toggle="modal" data-target="#IngresarInternacion">Agregar</a> -->
+
+                    <a class="btn btn-info" href="/mostrar/{{ afiliado[0] }}"> <i class="fas fa-eye"></i></a>
+                    <!--<a onclick="return confirm('¿Desea Eliminar el afiliado?')" class="btn btn-danger" href="#"> <i class="fas fa-trash-alt"> </i> </a> -->
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+    <!-------- MODAL INGRESAR AFILIADO ------>
+    
+    <div class="modal fade" id="IngresarAfiliado" tabindex="-1" role="dialog" aria-labelledby="IngresarAfiliadoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color:  #e3f2fd;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="IngresarAfiliadoLabel">INGRESAR AFILIADO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del modal -->
+                    <form method="post" action="/ingresoafiliado" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="Dni">DNI</label>
+                                <input id="txtDni" class="form-control" type="text" name="txtDni"
+                                    title="Por favor ingrese un DNI" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="txtNombre">Nombre</label>
+                                <input id="txtNombre" class="form-control" type="text" name="txtNombre"
+                                    title="Por favor ingrese un Nombre"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+    
+                            <div class="form-group col-md-6">
+                                <label for="txtApellido">Apellido</label>
+                                <input id="txtApellido" class="form-control" type="text" name="txtApellido"
+                                    title="Por favor ingrese Apellido"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+    
+                        </div>
+    
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="txtEdad">Edad</label>
+                                <input id="txtEdad" class="form-control" type="number" name="txtEdad"
+                                    title="Por favor ingrese la edad" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="txtSexo">Sexo</label>
+                                <select name="Sexo" class="form-control" type="select"
+                                    title="Por favor seleccione una de las dos opciones">
+                                    <option value="MASCULINO">MASCULINO</option>
+                                    <option value="FEMENINO">FEMENINO</option>
+                                </select>
+                            </div>
+                        </div>
+    
+    
+                        <div class="row">
+    
+                            <div class="form-group col-md-12">
+                                <label for="txtFuerza">Fuerza</label>
+                                <select name="Fuerza" class="form-control" type="select">
+                                    <option value="GENDARMERIA">GENDARMERIA</option>
+                                    <option value="FUERZA AEREA">FUERZA AEREA</option>
+                                    <option value="EJERCITO">EJERCITO</option>
+                                    <option value="ARMADA">ARMADA</option>
+                                    <option value="PERSONAL CIVIL">PERSONAL CIVIL</option>
+                                    <option value="FAMILIAR">FAMILIAR</option>
+                                    <option value="OTRO">OTRO</option>
+    
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                            <div class="row">
+    
+                                <div class="form-group col-md-12">
+                                    <label for="txtobservacionesA">Observaciones</label>
+                                    <textarea id="txtobservacionesA" rows="1" cols="5" class="form-control" name="observacionesA"
+                                        onkeyup="javascript:this.value=this.value.toUpperCase();"> </textarea>
+                                </div>
+                
+                            </div>
+    
+                            <div class="form-group col-md-6 d-flex align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="PENDIENTE" checked>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        PENDIENTE
+                                    </label>
+                                </div>
+                                <div class="form-check ml-3">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="CARGADO">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        CARGADO
+                                    </label>
+                                </div>
+                            </div>
+                           
+    
+            </div>
+    
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-success" value="Agregar">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+    
+            </form>
+          </div>
+        </div>
+    </div>
+    
+
+
+<!-------- MODAL INGRESAR INTERNACION ------>
+
+    <div class="modal fade" id="IngresarInternacion" tabindex="-1" role="dialog"
+        aria-labelledby="IngresarInternacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color:  #e3f2fd;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="IngresarInternacionLabel">Ingresar Internacion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Contenido del modal -->
+                    <form method="post" action="/ingresointernacion" enctype="multipart/form-data">
+                        
+                        <div class="row">
+                            <input id="txtIdInter" type="hidden" name="idInter">
+
+                            <div class="form-group col-md-12">
+                                <label for="Prestador">Prestador</label>
+                                <select id="txtPrestador" class="form-control" type="select" name="prestador">
+                                    <option value="SANATORIO ALBERDI">SANATORIO ALBERDI</option>
+                                    <option value="CLINICA YUNES">CLINICA YUNES</option>
+                                    <option value="SANATORIO SANTIAGO">SANATORIO SANTIAGO</option>
+                                    <option value="INSTITUTO DE CARDIOLGIA">INSTITUTO DE CARDIOLGIA</option>
+                                    <option value="SANATORIO CENTRAL BANDA">SANATORIO CENTRAL BANDA</option>
+                                    <option value="CLINICA DEL SOL">CLINICA DEL SOL</option>
+                                    <option value="CARDIO YUNES">CARDIO YUNES</option>
+                                    <option value="CARDIO INSTITUTO">CARDIO INSTITUTO</option>
+                                    
+                                </select>
+                            </div>
+                         </div>
+
+
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="txtFechaIngreso">Fecha Ingreso</label>
+                                <input id="txtFechaIngreso" class="form-control" type="date" name="fechaingreso"
+                                    title="Por favor ingrese una fecha" required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="txtFechaSalida">Fecha Egreso</label>
+                                <input id="txtFechaSalida" class="form-control" type="date" name="fechasalida"
+                                    title="Por favor ingrese una fecha" required>
+                                 
+                            </div>
+
+                            <div class="form-group col-md-12">
+                              <label id="error" class="text-danger" style="display:none;"> La fecha de Egreso no puede ser menor que la fecha de ingreso.</label>
+                            </div>
+                             
+                                                            
+                              
+                            
+                             
+                        </div>
+
+                        <div class="row">
+                            
+                            <div class="form-group col-md-6">
+                                <label for="txtTotalDias">Total de dias</label>
+                                <input id="txtTotalDias" class="form-control" type="number" name="totaldias"
+                                    title="Por favor ingrese una cantidad" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="txtMedico">Medico</label>
+                                <input id="txtMedico" class="form-control" type="text" name="medico"
+                                    title="Por favor ingrese un Nombre" onkeyup="javascript:this.value=this.value.toUpperCase();" >
+                            </div>
+                            
+                        </div>
+
+                        <div class="row">
+                            
+                            <div class="form-group col-md-12">
+                                <label for="txtDiagnostico">Diagnostico</label>
+                                <input id="txtDiagnostico" class="form-control" type="text" name="diagnostico"
+                                    title="Por favor ingrese un diagnostico" onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            
+                            <div class="form-group col-md-12">
+                                <label for="txtObservaciones">Observaciones</label>
+                                <textarea id="txtObservaciones" rows="1" cols="5" class="form-control"  name="observaciones"
+                                     onkeyup="javascript:this.value=this.value.toUpperCase();"> </textarea>
+                            </div>
+
+                        </div>
+
+
+                        </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-success" value="Agregar">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+<!-- MODAL MODIFICAR AFILIADO -->
+<div class="modal fade" id="ModificarAfiliado" tabindex="-1" role="dialog" aria-labelledby="ModificarAfiliadoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:  #e3f2fd;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModificarAfiliadoLabel">Modificar Afiliado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/actualizarafiliado" enctype="multipart/form-data">
+                    <div class="row">
+                        <input id="txtIDM" type="hidden" name="id">
+
+                        <div class="form-group col-md-6">
+                            <label for="txtDni">DNI</label>
+                            <input id="txtDniM" class="form-control" type="text" name="dni" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="txtNombre">Nombre</label>
+                            <input id="txtNombreM" class="form-control" type="text" name="nombre" onkeyup="javascript:this.value=this.value.toUpperCase();"  required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="txtApellido">Apellido</label>
+                            <input id="txtApellidoM" class="form-control" type="text" name="apellido" onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="txtEdad">Edad</label>
+                            <input id="txtEdadM" class="form-control" type="number" name="edad" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="txtSexo">Sexo</label>
+                            <select id="txtSexoM" name="sexo" class="form-control" required>
+                                <option value="MASCULINO">MASCULINO</option>
+                                <option value="FEMENINO">FEMENINO</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+    
+                        <div class="form-group col-md-12">
+                            <label for="txtFuerza">Fuerza</label>
+                            <select name="Fuerza" class="form-control" type="select" id="txtFuerzaM">
+                                <option value="GENDARMERIA">GENDARMERIA</option>
+                                <option value="FUERZA AEREA">FUERZA AEREA</option>
+                                <option value="EJERCITO">EJERCITO</option>
+                                <option value="ARMADA">ARMADA</option>
+                                <option value="PERSONAL CIVIL">PERSONAL CIVIL</option>
+                                <option value="FAMILIAR">FAMILIAR</option>
+                                <option value="OTRO">OTRO</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+    
+                        <div class="form-group col-md-12">
+                            <label for="txtobservacionesAM">Observaciones</label>
+                            <textarea id="txtobservacionesAM" rows="1" cols="5" class="form-control" name="observacionesA"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"> </textarea>
+                        </div>
+        
+                      </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="PENDIENTE" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          PENDIENTE
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="CARGADO">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          CARGADO
+                        </label>
+                      </div>
+
+
+                      
+
+
+
+
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" value="Guardar Cambios">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+
+<!-- jQuery (Versión completa) -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.editar-btn').on('click', function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/editarafiliado/' + id,
+                method: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    $('#txtIDM').val(data[0]);
+                    $('#txtDniM').val(data[1]);
+                    $('#txtNombreM').val(data[2]);
+                    $('#txtApellidoM').val(data[3]);
+                    $('#txtEdadM').val(data[4]);
+                    $('#txtSexoM').val(data[5]);
+                    $('#txtFuerzaM').val(data[6]);
+                    $('#txtobservacionesAM').val(data[8])
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " " + error);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.internacion-btn').on('click', function() {
+            var id = $(this).data('id');
+            console.log(id); // Esto imprimirá el ID en la consola para verificar
+            $('#txtIdInter').val(id);
+        });
+    });
+</script>
+
+
+<script>
+    document.getElementById('IngresarInternacion').addEventListener('submit', function(event) {
+        var fechaIngreso = new Date(document.getElementById('txtFechaIngreso').value);
+        var fechaSalida = new Date(document.getElementById('txtFechaSalida').value);
+        
+        if (fechaSalida < fechaIngreso) {
+            event.preventDefault(); // Evitar que el formulario se envíe
+            document.getElementById('error').style.display = 'block'; // Mostrar mensaje de error
+        } else {
+            document.getElementById('error').style.display = 'none'; // Ocultar mensaje de error si la validación pasa
+        }
+    });
+</script>
+
+
+
+
+
+
+    {% include 'footer.html' %}

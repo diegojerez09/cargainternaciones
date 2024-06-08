@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internaciones</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <!-- iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- FUENTES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+
+    <!-- CURSOR -->
+    <style>
+        .nav-link {
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- FUENTES -->
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .btn {
+        font-family: 'Roboto', sans-serif;
+    }
+    .modal-title {
+        font-family: 'Roboto', sans-serif;
+    }
+</style>
+    
+</head>
+
+<body>
+    <nav class="navbar" style="background-color: #e3e8fd;">
+        <a class="nav-link disabled" href="/">INTERNACIONES</a>
+        <button class="navbar-toggler" data-target="#my-nav" data-toggle="collapse" aria-controls="my-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="my-nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <!--<li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#IngresarAfiliado" tabindex="-1" aria-disabled="true" >Ingresar afiliado </a>
+                </li> -->
+               <!-- <li class="nav-item">
+                    <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Internacion</a>
+                </li> -->
+                                               
+            </ul>
+        </div>
+    </nav>
+
+<br>
+    
+
+    <!-- Mensajes Flash -->
+<div class="container-lg">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                        {{ message }}
+                    
+                {% endfor %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<br>
+
+<style>
+    .container-wide {
+        width: 90%;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+</style> 
+    
+<div class="container container-wide">
+   
+    
+
+
+
+    
+        
+    
+
+        
+
+        

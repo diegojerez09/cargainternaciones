@@ -1,0 +1,230 @@
+{% include 'header.html' %}
+
+<br>
+
+<a class="btn btn-success" href="/" >Regresar</a>
+
+
+
+
+
+
+<style>
+    .center-text {
+        text-align: center;
+    }
+</style>
+
+<br>
+{%for afiliado in afiliado%}
+
+<h3 class="center-text"> {{ afiliado.nombre }} {{afiliado.apellido}}</h3> <!-- Asume que afiliado[1] es el nombre y afiliado[2] es el apellido -->
+
+{% endfor %}
+
+<br>
+
+<table class="table table-light" id="datatable">
+    <thead class="thead-light">
+        <tr>
+            <th>Prestador</th>
+            <th>Ingreso</th>
+            <th>Salida</th>
+            <th>Diagnostico</th>
+            <th>Total de Dias</th>
+            <th>Medico</th>
+            <th>Observaciones</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for internacion in internacion  %}
+
+        <tr>
+            <td>{{internacion.prestador}}</td>
+            <td>{{internacion.fechaingreso}}</td>
+            <td>{{internacion.fechasalida}}</td>
+            <td>{{internacion.diagnostico}}</td>
+            <td>{{internacion.totaldias}}</td>
+            <td>{{internacion.medico}}</td>
+            <td>{{internacion.observaciones}}</td>
+
+            <td>
+                <button class="btn btn-warning editar-btn" data-id="{{internacion.idinternacion}}" data-toggle="modal" data-target="#ModificarInternacion">Editar</button>
+                <!-- <button class="btn btn-success internacion-btn" data-id="#" data-toggle="modal" data-target="#IngresarInternacion">Agregar</button> -->
+
+                <!--<a class="btn btn-success" href="#" data-toggle="modal" data-target="#IngresarInternacion">Agregar</a> -->
+                
+                <!--<a class="btn btn-info" href="#">Mostrar</a> -->
+                <!--<a onclick="return confirm('¿Desea Eliminar la herramienta?')" class="btn btn-danger" href="#">Eliminar</a> -->
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-------- MODAL MODIFICAR INTERNACION ------>
+
+<div class="modal fade" id="ModificarInternacion" tabindex="-1" role="dialog"
+aria-labelledby="ModificarInternacionModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content" style="background-color: #e3e9e8;">
+        <div class="modal-header">
+            <h5 class="modal-title" id="ModificarInternacionLabel">Modificar Internacion</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Contenido del modal -->
+            <form method="post" action="/actualizarinternacion" enctype="multipart/form-data">
+                <div class="row">
+                    <input id="txtIdInter" type="hidden" name="idInter">
+                    
+                    <div class="form-group col-md-12">
+                        <label for="Prestador">Prestador</label>
+                        <select id="txtPrestador" class="form-control" type="select" name="prestador">
+                            <option value="SANATORIO ALBERDI">SANATORIO ALBERDI</option>
+                            <option value="CLINICA YUNES">CLINICA YUNES</option>
+                            <option value="SANATORIO SANTIAGO">SANATORIO SANTIAGO</option>
+                            <option value="INSTITUTO DE CARDIOLGIA">INSTITUTO DE CARDIOLGIA</option>
+                            <option value="SANATORIO CENTRAL BANDA">SANATORIO CENTRAL BANDA</option>
+                            <option value="CLINICA DEL SOL">CLINICA DEL SOL</option>
+                            <option value="CARDIO YUNES">CARDIO YUNES</option>
+                            <option value="CARDIO INSTITUTO">CARDIO INSTITUTO</option>
+                            
+                        </select>
+                    </div>
+                 </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="txtFechaIngreso">Fecha Ingreso</label>
+                        <input id="txtFechaIngreso" class="form-control" type="date" name="fechaingreso"
+                            title="Por favor ingrese una fecha"  required>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="txtFechaSalida">Fecha Egreso</label>
+                        <input id="txtFechaSalida" class="form-control" type="date" name="fechasalida"
+                            title="Por favor ingrese una fecha"  required>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label id="error" class="text-danger" style="display:none;"> La fecha de Egreso no puede ser menor que la fecha de ingreso.</label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    
+                    <div class="form-group col-md-6">
+                        <label for="txtTotalDias">Total de dias</label>
+                        <input id="txtTotalDias" class="form-control" type="number" name="totaldias"
+                            title="Por favor ingrese una cantidad" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtMedico">Medico</label>
+                        <input id="txtMedico" class="form-control" type="text" name="medico"
+                            title="Por favor ingrese un Nombre" onkeyup="javascript:this.value=this.value.toUpperCase();" >
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    
+                    <div class="form-group col-md-12">
+                        <label for="txtDiagnostico">Diagnostico</label>
+                        <input id="txtDiagnostico" class="form-control" type="text" name="diagnostico"
+                            title="Por favor ingrese un diagnostico" onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                    </div>
+
+                </div>
+                <div class="row">
+                            
+                    <div class="form-group col-md-12">
+                        <label for="txtObservaciones">Observaciones</label>
+                        <textarea id="txtObservaciones" rows="1" cols="5" class="form-control"  name="observaciones"
+                             onkeyup="javascript:this.value=this.value.toUpperCase();"> </textarea>
+                    </div>
+
+                </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-success" value="Guardar Cambios">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+
+        </form>
+
+    </div>
+</div>
+</div>
+
+
+
+
+<!-- jQuery (Versión completa) -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.editar-btn').on('click', function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/editarinternacion/' + id,
+                method: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    $('#txtIdInter').val(data[0]);
+                    $('#txtFechaIngreso').val(data[3]);
+                    $('#txtFechaSalida').val(data[4]);
+                    $('#txtTotalDias').val(data[6]);
+                    $('#txtMedico').val(data[7]);
+                    $('#txtDiagnostico').val(data[5]);
+                    $('#txtPrestador').val(data[2]);
+                    $('#txtObservaciones').val(data[8])
+                    
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " " + error);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    document.getElementById('ModificarInternacion').addEventListener('submit', function(event) {
+        var fechaIngreso = new Date(document.getElementById('txtFechaIngreso').value);
+        var fechaSalida = new Date(document.getElementById('txtFechaSalida').value);
+        
+        if (fechaSalida < fechaIngreso) {
+            event.preventDefault(); // Evitar que el formulario se envíe
+            document.getElementById('error').style.display = 'block'; // Mostrar mensaje de error
+        } else {
+            document.getElementById('error').style.display = 'none'; // Ocultar mensaje de error si la validación pasa
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% include 'footer.html' %}
