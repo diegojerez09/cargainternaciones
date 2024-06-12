@@ -6,6 +6,7 @@ import json
 from functools import wraps 
 from flask_mysqldb import MySQL
 import MySQLdb
+import pandas as pd
 
 
 
@@ -29,13 +30,14 @@ mysql = MySQL(app)
 
 @app.route('/')
 def home():
-    sql = "SELECT afiliado.id,afiliado.dni, afiliado.nombre, afiliado.apellido,afiliado.edad, afiliado.sexo, afiliado.fuerza,afiliado.estado,afiliado.observaciones FROM `afiliado`;"
+    sql = "SELECT afiliado.id,afiliado.dni, afiliado.nombre, afiliado.apellido,afiliado.edad, afiliado.sexo, afiliado.fuerza,afiliado.observaciones FROM `afiliado`;"
     
     conn = mysql.connection
     cursor = conn.cursor()
     try:
         cursor.execute(sql)
         afiliado = cursor.fetchall()
+        
         
     finally:
         cursor.close()  # Cierra el cursor
@@ -55,10 +57,13 @@ def ingresoafiliado():
     _edad=request.form['txtEdad']
     opciones_seleccionadas1= request.form.getlist('Sexo')
     opciones_fuerza=request.form.getlist('Fuerza')
-    estado = request.form.get('flexRadioDefault')
+    #estado = request.form.get('flexRadioDefault')
     observaciones = request.form['observacionesA']
 
     
+    if not _edad:
+        _edad= None
+
 
     
     conn = mysql.connection
@@ -73,7 +78,7 @@ def ingresoafiliado():
 
 
 
-    if _nombre=='' or _dni=='' or _apellido=='' or _edad=='' or opciones_fuerza=='':
+    if _nombre=='' or _dni=='' or _apellido=='' or opciones_fuerza=='':
         flash('Todos los campos deben estar completos','error')
         return redirect('/')
 
@@ -90,9 +95,9 @@ def ingresoafiliado():
     #print(opcion2)
     #print(f'Estado: {estado}')
     
-    sql = "INSERT INTO `afiliado` (`dni`, `nombre`, `apellido`, `edad`, `sexo`,`fuerza`,`estado`,`observaciones`) VALUES ( %s, %s, %s, %s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `afiliado` (`dni`, `nombre`, `apellido`, `edad`, `sexo`,`fuerza`,`observaciones`) VALUES ( %s, %s, %s, %s,%s,%s,%s,%s);"
 
-    datos=(_dni,_nombre,_apellido,_edad,opcion1,opcion2,estado,observaciones)
+    datos=(_dni,_nombre,_apellido,_edad,opcion1,opcion2,observaciones)
     conn = mysql.connection
     cursor = conn.cursor()
 
@@ -138,12 +143,15 @@ def actualizarAafiliado():
     
     _id=request.form['id']
     opciones_fuerza=request.form.getlist('Fuerza')
-    estado = request.form.get('flexRadioDefault')
+    #estado = request.form.get('flexRadioDefault')
     observaciones = request.form['observacionesA']
 
     #print(_id)
 
-    if _nombre=='' or _dni=='' or _apellido=='' or _edad=='' :
+    if not _edad:
+        _edad= None
+
+    if _nombre=='' or _dni=='' or _apellido=='' :
         flash('Todos los campos deben estar completos','error')
         return redirect('/')
         
@@ -155,9 +163,9 @@ def actualizarAafiliado():
     for Fuerza in opciones_fuerza:
         opcion2 = Fuerza
 
-    sql = "UPDATE afiliado SET dni =%s, nombre=%s, apellido=%s, edad=%s ,sexo=%s, fuerza=%s,estado=%s,observaciones=%s WHERE id=%s ;"
+    sql = "UPDATE afiliado SET dni =%s, nombre=%s, apellido=%s, edad=%s ,sexo=%s, fuerza=%s,observaciones=%s WHERE id=%s ;"
 
-    datos=(_dni,_nombre,_apellido,_edad,opcion1,opcion2,estado,observaciones,_id)
+    datos=(_dni,_nombre,_apellido,_edad,opcion1,opcion2,observaciones,_id)
 
     conn = mysql.connection
     cursor = conn.cursor()
@@ -188,6 +196,7 @@ def ingresointernacion():
     _medico=request.form['medico']
     _diagnostico= request.form['diagnostico']
     _observaciones = request.form['observaciones']
+    estado = request.form.get('flexRadioDefault')
 
     for prestador in _opciones_prestador:
         _prestador = prestador
@@ -220,13 +229,13 @@ def ingresointernacion():
 
 
     
-    if _prestador=='' or _fechaingreso=='' or _fechasalida=='' or _totaldias=='' or _diagnostico=='':
+    if _prestador=='' or _fechaingreso=='' or _diagnostico=='':
         flash('Todos los campos deben estar completos','error')
         return redirect('/')
        
-    sql = "INSERT INTO `internacion` (`idafiliado`, `prestador`, `fechaingreso`, `fechasalida`, `diagnostico`,`totaldias`,`medico`,`observaciones`) VALUES (%s, %s, %s, %s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `internacion` (`idafiliado`, `prestador`, `fechaingreso`, `fechasalida`, `diagnostico`,`totaldias`,`medico`,`observaciones`,`estado`) VALUES (%s, %s, %s, %s,%s,%s,%s,%s,%s);"
 
-    datos=(id,_prestador,_fechaingreso,_fechasalida,_diagnostico,_totaldias,_medico,_observaciones)
+    datos=(id,_prestador,_fechaingreso,_fechasalida,_diagnostico,_totaldias,_medico,_observaciones,estado)
     
     
     conn = mysql.connection
@@ -236,7 +245,7 @@ def ingresointernacion():
         cursor.execute(sql, datos)
         conn.commit()
         flash('Internacion Agregada', 'success')
-        actualizar_estado_afiliado(id)
+        #actualizar_estado_afiliado(id)
     except Exception as e:
         conn.rollback()
         flash(f'Error al agregar la internacion: {str(e)}', 'error')
@@ -335,6 +344,7 @@ def actualizarinternacion():
     _medico = request.form['medico']
     _diagnostico = request.form['diagnostico']
     _observaciones = request.form['observaciones']
+    estado = request.form.get('flexRadioDefault')
 
     for prestador in _opciones_prestador:
         _prestador = prestador
@@ -344,8 +354,8 @@ def actualizarinternacion():
         flash('Todos los campos deben estar completos', 'error')
         return redirect('/')
       
-    sql = "UPDATE internacion SET prestador=%s, fechaingreso=%s, fechasalida=%s, diagnostico=%s, totaldias=%s, medico=%s,observaciones=%s WHERE idinternacion=%s;"
-    datos = (_prestador, _fechaingreso, _fechasalida, _diagnostico, _totaldias, _medico,_observaciones, id)
+    sql = "UPDATE internacion SET prestador=%s, fechaingreso=%s, fechasalida=%s, diagnostico=%s, totaldias=%s, medico=%s,observaciones=%s,estado=%s WHERE idinternacion=%s;"
+    datos = (_prestador, _fechaingreso, _fechasalida, _diagnostico, _totaldias, _medico,_observaciones,estado, id)
     
     conn = mysql.connection
     cursor = conn.cursor()

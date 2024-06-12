@@ -34,6 +34,7 @@
             <th>Total de Dias</th>
             <th>Medico</th>
             <th>Observaciones</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -48,6 +49,14 @@
             <td>{{internacion.totaldias}}</td>
             <td>{{internacion.medico}}</td>
             <td>{{internacion.observaciones}}</td>
+            
+
+            {% if internacion.estado == 'PENDIENTE' %}
+                <td style="background-color: rgba(229, 255, 0, 0.849)">{{internacion.estado}}</td>
+                {% else %}
+                <td style="background-color: rgb(0, 255, 76)">{{internacion.estado}}</td>
+                
+                {% endif %}
 
             <td>
                 <button class="btn btn-warning editar-btn" data-id="{{internacion.idinternacion}}" data-toggle="modal" data-target="#ModificarInternacion">Editar</button>
@@ -150,6 +159,21 @@ aria-labelledby="ModificarInternacionModalLabel" aria-hidden="true">
                              onkeyup="javascript:this.value=this.value.toUpperCase();"> </textarea>
                     </div>
 
+                </div>
+
+                <div class="form-group col-md-6 d-flex align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="PENDIENTE" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            PENDIENTE
+                        </label>
+                    </div>
+                    <div class="form-check ml-3">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="CARGADO">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            CARGADO
+                        </label>
+                    </div>
                 </div>
 
 
